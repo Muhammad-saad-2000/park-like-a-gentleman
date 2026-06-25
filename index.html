@@ -187,7 +187,7 @@
             }
 
             .poster-wrap {
-                width: min(100%, 720px);
+                width: 100%;
             }
 
             .a4-poster {
@@ -253,6 +253,37 @@
                 margin-top: clamp(12px, 2.4vw, 28px);
             }
 
+            .make-your-own {
+                align-items: center;
+                border-top: 2px solid #edf0f4;
+                display: flex;
+                gap: clamp(12px, 2.6vw, 26px);
+                justify-content: center;
+                margin-top: clamp(16px, 3vw, 34px);
+                padding-top: clamp(12px, 2.2vw, 24px);
+                width: min(100%, 560px);
+            }
+
+            .qr-code {
+                background: #ffffff;
+                border: 2px solid #111111;
+                border-radius: 8px;
+                display: block;
+                flex: 0 0 auto;
+                height: clamp(76px, 12vw, 126px);
+                padding: 1px;
+                width: clamp(76px, 12vw, 126px);
+            }
+
+            .qr-copy {
+                color: #252b33;
+                font-size: clamp(17px, 2.9vw, 28px);
+                font-weight: 900;
+                line-height: 1.35;
+                margin: 0;
+                text-align: right;
+            }
+
             @page {
                 margin: 0;
                 size: A4;
@@ -309,29 +340,19 @@
         <main class="app-shell">
             <section class="controls" aria-label="مولد لوحة الوقوف">
                 <div class="brand">
-                    <span class="brand-mark" aria-hidden="true">P</span>
-                    <h1>Park Like a Gentleman</h1>
+                    <h1>أركن بذوق</h1>
                     <p class="tagline">اكتب رقمك وافتح نافذة الطباعة لحفظ اللوحة PDF أو طباعتها مباشرة.</p>
                 </div>
 
                 <form id="posterForm">
                     <label for="phoneInput">رقم الهاتف</label>
-                    <input class="phone-input" id="phoneInput" inputmode="tel" autocomplete="tel" name="phone" placeholder="01065478654" value="01065478654" required>
-                    <div class="actions">
-                        <button class="button button-primary" id="printPosterButton" type="submit">
-                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                <path d="M7 8V4h10v4M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M7 14h10v6H7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            </svg>
-                            طباعة / حفظ PDF
-                        </button>
-                        <button class="button button-secondary" id="printButton" type="button" title="طباعة">
-                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                <path d="M7 8V4h10v4M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M7 14h10v6H7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            </svg>
-                            <span class="sr-only">طباعة</span>
-                        </button>
-                    </div>
-                    <div class="status" id="status" role="status" aria-live="polite"></div>
+                    <input class="phone-input" id="phoneInput" inputmode="tel" autocomplete="tel" name="phone" placeholder="01234567890" value="01234567890" required>
+                    <button class="button button-primary" id="printPosterButton" type="submit">
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M7 8V4h10v4M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M7 14h10v6H7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                        طباعة / حفظ PDF
+                    </button>
                 </form>
             </section>
 
@@ -344,6 +365,10 @@
                         <div class="phone-number" id="posterPhone">01065478654</div>
                         <img src="Icons/phone.png" class="poster-icon" alt="">
                         <div class="footer">شكراً لتفهمكم وذوقكم</div>
+                        <div class="make-your-own" aria-label="امسح الكود لعمل لوحة مشابهة">
+                            <img src="Icons/qrcode.svg" class="qr-code" alt="QR code لفتح موقع أركن بذوق">
+                            <p class="qr-copy">عايز تعمل لوحة زي دي برقمك؟<br>امسح الكود</p>
+                        </div>
                     </article>
                 </div>
             </section>
@@ -354,12 +379,14 @@
             const input = document.querySelector("#phoneInput");
             const posterPhone = document.querySelector("#posterPhone");
             const status = document.querySelector("#status");
-            const printButton = document.querySelector("#printButton");
+            const printButton = document.querySelector("#printPosterButton");
 
             const normalizePhone = (value) => value.replace(/[^\d+]/g, "").slice(0, 18);
 
             const setStatus = (message) => {
-                status.textContent = message;
+                if (status) {
+                    status.textContent = message;
+                }
             };
 
             const syncPoster = () => {
