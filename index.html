@@ -4,8 +4,9 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Park Like a Gentleman</title>
+        <title>أركن بذوق</title>
         <meta name="description" content="Create a printable parking contact page from your phone number.">
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚗</text></svg>">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
@@ -208,6 +209,22 @@
                 border-color: var(--blue);
                 background: #ffffff;
                 box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+            }
+
+            .input-hint {
+                font-size: 11px;
+                color: var(--muted);
+                margin-top: 6px;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                line-height: 1.4;
+            }
+
+            .input-hint svg {
+                width: 14px;
+                height: 14px;
+                flex-shrink: 0;
             }
 
             .select-input,
@@ -615,6 +632,13 @@
                             <label for="phoneInput">رقم الهاتف</label>
                             <input class="phone-input" id="phoneInput" inputmode="tel" autocomplete="tel" name="phone"
                                 placeholder="01234567890" value="01234567890" required>
+                            <span class="input-hint">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                </svg>
+                                لا يتم حفظ أو جمع رقم هاتفك. العملية تتم بالكامل على جهازك.
+                            </span>
                         </div>
 
                         <div class="control-group">
