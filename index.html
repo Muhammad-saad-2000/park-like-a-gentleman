@@ -53,16 +53,86 @@
                 overflow: hidden;
             }
 
-            .controls {
+            .controls-panel {
                 background: #ffffff;
                 border-left: 1px solid var(--line);
+                box-shadow: 4px 0 20px rgba(0, 0, 0, 0.02);
+                z-index: 10;
+                position: relative;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+            }
+
+            .controls {
+                flex-grow: 1;
                 display: flex;
                 flex-direction: column;
                 gap: 24px;
                 padding: 32px 24px;
                 overflow-y: auto;
-                box-shadow: 4px 0 20px rgba(0, 0, 0, 0.02);
-                z-index: 10;
+                scrollbar-width: thin;
+                scrollbar-color: rgba(15, 23, 42, 0.25) transparent;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            /* Custom styled scrollbar that is always visible and prominent */
+            .controls::-webkit-scrollbar {
+                width: 6px;
+                display: block;
+            }
+
+            .controls::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            .controls::-webkit-scrollbar-thumb {
+                background-color: rgba(15, 23, 42, 0.25);
+                border-radius: 99px;
+            }
+
+            .controls::-webkit-scrollbar-thumb:hover {
+                background-color: rgba(15, 23, 42, 0.4);
+            }
+
+            /* Scroll Indicator styling */
+            .scroll-indicator {
+                position: absolute;
+                bottom: 16px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(15, 23, 42, 0.4);
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+                color: #ffffff;
+                padding: 8px 16px;
+                border-radius: 30px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 12px;
+                font-weight: 700;
+                pointer-events: none;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                transition: opacity 0.3s ease, transform 0.3s ease;
+                z-index: 20;
+            }
+
+            .scroll-indicator.hidden {
+                opacity: 0;
+                transform: translate(-50%, 10px);
+            }
+
+            .scroll-indicator svg {
+                width: 20px;
+                height: 20px;
+                animation: bounce 1.5s infinite;
+            }
+
+            @keyframes bounce {
+                0%, 100% { transform: translateY(0); }
+                50% { transform: translateY(3px); }
             }
 
             .brand {
@@ -460,13 +530,16 @@
                     overflow: hidden;
                 }
 
-                .controls {
+                .controls-panel {
                     border-left: 0;
                     border-bottom: 1px solid var(--line);
+                    max-height: 45vh;
+                    height: auto;
+                }
+
+                .controls {
                     padding: 18px;
                     gap: 16px;
-                    max-height: 45vh;
-                    overflow-y: auto;
                 }
 
                 .preview-area {
@@ -490,7 +563,7 @@
                     background: #ffffff;
                 }
 
-                .controls,
+                .controls-panel,
                 .preview-badge {
                     display: none !important;
                 }
@@ -520,11 +593,12 @@
     </head>
     <body>
         <main class="app-shell">
-            <section class="controls" aria-label="مولد لوحة الوقوف">
-                <div class="brand">
-                    <h1>أركن بذوق</h1>
-                    <p class="tagline">صمم لوحة أرقام لسيارتك واطبعها أو احفظها كـ PDF لتضعها على الزجاج.</p>
-                </div>
+            <section class="controls-panel">
+                <div class="controls" aria-label="مولد لوحة الوقوف">
+                    <div class="brand">
+                        <h1>أركن بذوق</h1>
+                        <p class="tagline">صمم لوحة أرقام لسيارتك واطبعها أو احفظها كـ PDF لتضعها على الزجاج.</p>
+                    </div>
 
                 <form id="posterForm">
                     <div class="control-group">
@@ -581,7 +655,14 @@
                         <div class="status" id="status"></div>
                     </div>
                 </form>
-            </section>
+            </div>
+            <div class="scroll-indicator" id="scrollIndicator">
+                <span>اسحب لأسفل لرؤية المزيد من الخيارات</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                    <path d="M12 5v14M19 12l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+        </section>
 
             <section class="preview-area" aria-label="معاينة اللوحة">
                 <div class="preview-badge">معاينة حيّة</div>
@@ -712,6 +793,36 @@
             });
 
             syncPoster();
+
+            // Scroll Indicator logic
+            const controls = document.querySelector(".controls");
+            const scrollIndicator = document.querySelector("#scrollIndicator");
+
+            const updateScrollIndicator = () => {
+                if (!controls || !scrollIndicator) return;
+                
+                const threshold = 15; // px from bottom
+                const scrolledToBottom = controls.scrollHeight - controls.scrollTop - controls.clientHeight <= threshold;
+                const isScrollable = controls.scrollHeight > controls.clientHeight + 5;
+
+                if (scrolledToBottom || !isScrollable) {
+                    scrollIndicator.classList.add("hidden");
+                } else {
+                    scrollIndicator.classList.remove("hidden");
+                }
+            };
+
+            controls.addEventListener("scroll", updateScrollIndicator);
+            window.addEventListener("resize", updateScrollIndicator);
+            
+            // Observe style changes (e.g. toggling the custom text container)
+            const observer = new MutationObserver(updateScrollIndicator);
+            if (customTextContainer) {
+                observer.observe(customTextContainer, { attributes: true, attributeFilter: ["style"] });
+            }
+
+            // Initial trigger
+            setTimeout(updateScrollIndicator, 150);
         </script>
     </body>
 </html>
