@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -56,7 +57,7 @@
             .controls-panel {
                 background: #ffffff;
                 border-left: 1px solid var(--line);
-                box-shadow: 4px 0 20px rgba(0, 0, 0, 0.02);
+                box-shadow: 0 0 40px rgba(15, 23, 42, 0.2);
                 z-index: 10;
                 position: relative;
                 height: 100%;
@@ -131,8 +132,15 @@
             }
 
             @keyframes bounce {
-                0%, 100% { transform: translateY(0); }
-                50% { transform: translateY(3px); }
+
+                0%,
+                100% {
+                    transform: translateY(0);
+                }
+
+                50% {
+                    transform: translateY(3px);
+                }
             }
 
             .brand {
@@ -150,7 +158,7 @@
                 align-items: center;
                 gap: 10px;
             }
-            
+
             .brand h1::before {
                 content: "🚗";
                 font-size: 24px;
@@ -268,7 +276,7 @@
                 flex-shrink: 0;
             }
 
-            .theme-option input:checked + .swatch {
+            .theme-option input:checked+.swatch {
                 transform: scale(1.1);
             }
 
@@ -532,9 +540,10 @@
 
                 .controls-panel {
                     border-left: 0;
-                    border-bottom: 1px solid var(--line);
+                    border-bottom: 1px solid #cbd5e1;
                     max-height: 45vh;
                     height: auto;
+                    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
                 }
 
                 .controls {
@@ -591,6 +600,7 @@
             }
         </style>
     </head>
+
     <body>
         <main class="app-shell">
             <section class="controls-panel">
@@ -600,69 +610,76 @@
                         <p class="tagline">صمم لوحة أرقام لسيارتك واطبعها أو احفظها كـ PDF لتضعها على الزجاج.</p>
                     </div>
 
-                <form id="posterForm">
-                    <div class="control-group">
-                        <label for="phoneInput">رقم الهاتف</label>
-                        <input class="phone-input" id="phoneInput" inputmode="tel" autocomplete="tel" name="phone" placeholder="01234567890" value="01234567890" required>
-                    </div>
-
-                    <div class="control-group">
-                        <label>مظهر اللوحة</label>
-                        <div class="theme-picker">
-                            <label class="theme-option">
-                                <input type="radio" name="theme" value="theme-yellow" checked>
-                                <span class="swatch" style="background: #ffd134; border: 2px solid #ffd134;"></span>
-                                <span class="theme-name">الكلاسيكي</span>
-                            </label>
-                            <label class="theme-option">
-                                <input type="radio" name="theme" value="theme-blue">
-                                <span class="swatch" style="background: #ffffff; border: 2px solid #2563eb;"></span>
-                                <span class="theme-name">الأزرق</span>
-                            </label>
-                            <label class="theme-option">
-                                <input type="radio" name="theme" value="theme-green">
-                                <span class="swatch" style="background: #ffffff; border: 2px solid #059669;"></span>
-                                <span class="theme-name">الأخضر</span>
-                            </label>
+                    <form id="posterForm">
+                        <div class="control-group">
+                            <label for="phoneInput">رقم الهاتف</label>
+                            <input class="phone-input" id="phoneInput" inputmode="tel" autocomplete="tel" name="phone"
+                                placeholder="01234567890" value="01234567890" required>
                         </div>
-                    </div>
 
-                    <div class="control-group">
-                        <label for="textPreset">رسالة اللوحة</label>
-                        <select class="select-input" id="textPreset">
-                            <option value="preset-1" selected>عذراً على الإزعاج (الافتراضي)</option>
-                            <option value="preset-2">موقف مؤقت (ودي ولطيف)</option>
-                            <option value="preset-3">تنبيه بالاتصال (مختصر)</option>
-                            <option value="preset-custom">نص مخصص...</option>
-                        </select>
-                    </div>
+                        <div class="control-group">
+                            <label>مظهر اللوحة</label>
+                            <div class="theme-picker">
+                                <label class="theme-option">
+                                    <input type="radio" name="theme" value="theme-yellow" checked>
+                                    <span class="swatch" style="background: #ffd134; border: 2px solid #ffd134;"></span>
+                                    <span class="theme-name">الكلاسيكي</span>
+                                </label>
+                                <label class="theme-option">
+                                    <input type="radio" name="theme" value="theme-blue">
+                                    <span class="swatch" style="background: #ffffff; border: 2px solid #2563eb;"></span>
+                                    <span class="theme-name">الأزرق</span>
+                                </label>
+                                <label class="theme-option">
+                                    <input type="radio" name="theme" value="theme-green">
+                                    <span class="swatch" style="background: #ffffff; border: 2px solid #059669;"></span>
+                                    <span class="theme-name">الأخضر</span>
+                                </label>
+                            </div>
+                        </div>
 
-                    <div id="customTextContainer" class="control-group" style="display: none; animation: fadeIn 0.3s ease;">
-                        <label for="customTitle">العنوان الرئيسي</label>
-                        <input class="text-input" id="customTitle" type="text" placeholder="مثال: عذراً على الإزعاج">
-                        
-                        <label for="customCopy" style="margin-top: 8px;">نص التوضيح</label>
-                        <textarea class="text-input" id="customCopy" rows="3" placeholder="مثال: إذا كانت سيارتي تعيق حركتك،&#10;برجاء الاتصال بي فوراً على:"></textarea>
-                    </div>
+                        <div class="control-group">
+                            <label for="textPreset">رسالة اللوحة</label>
+                            <select class="select-input" id="textPreset">
+                                <option value="preset-1" selected>عذراً على الإزعاج (الافتراضي)</option>
+                                <option value="preset-2">موقف مؤقت (ودي ولطيف)</option>
+                                <option value="preset-3">تنبيه بالاتصال (مختصر)</option>
+                                <option value="preset-custom">نص مخصص...</option>
+                            </select>
+                        </div>
 
-                    <div class="actions">
-                        <button class="button button-primary" id="printPosterButton" type="submit">
-                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                <path d="M7 8V4h10v4M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M7 14h10v6H7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            </svg>
-                            طباعة / حفظ PDF
-                        </button>
-                        <div class="status" id="status"></div>
-                    </div>
-                </form>
-            </div>
-            <div class="scroll-indicator" id="scrollIndicator">
-                <span>اسحب لأسفل لرؤية المزيد من الخيارات</span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-                    <path d="M12 5v14M19 12l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </div>
-        </section>
+                        <div id="customTextContainer" class="control-group"
+                            style="display: none; animation: fadeIn 0.3s ease;">
+                            <label for="customTitle">العنوان الرئيسي</label>
+                            <input class="text-input" id="customTitle" type="text"
+                                placeholder="مثال: عذراً على الإزعاج">
+
+                            <label for="customCopy" style="margin-top: 8px;">نص التوضيح</label>
+                            <textarea class="text-input" id="customCopy" rows="3"
+                                placeholder="مثال: إذا كانت سيارتي تعيق حركتك،&#10;برجاء الاتصال بي فوراً على:"></textarea>
+                        </div>
+
+                        <div class="actions">
+                            <button class="button button-primary" id="printPosterButton" type="submit">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                    <path
+                                        d="M7 8V4h10v4M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M7 14h10v6H7z"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                </svg>
+                                طباعة / حفظ PDF
+                            </button>
+                            <div class="status" id="status"></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="scroll-indicator" id="scrollIndicator">
+                    <span>اسحب لأسفل لرؤية المزيد من الخيارات</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                        <path d="M12 5v14M19 12l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
+            </section>
 
             <section class="preview-area" aria-label="معاينة اللوحة">
                 <div class="preview-badge">معاينة حيّة</div>
@@ -671,7 +688,8 @@
                         <div class="poster-inner">
                             <img src="Icons/car.png" class="poster-icon" alt="">
                             <h2 id="posterTitle">عذراً على الإزعاج</h2>
-                            <p class="poster-copy" id="posterCopy">إذا كانت سيارتي تعيق حركتك،<br>برجاء الاتصال بي فوراً على:</p>
+                            <p class="poster-copy" id="posterCopy">إذا كانت سيارتي تعيق حركتك،<br>برجاء الاتصال بي فوراً
+                                على:</p>
                             <div class="phone-number" id="posterPhone">01234567890</div>
                             <img src="Icons/phone.png" class="poster-icon" alt="">
                             <div class="footer" id="posterFooter">شكراً لتفهمكم وذوقكم</div>
@@ -699,7 +717,7 @@
             const customTextContainer = document.querySelector("#customTextContainer");
             const customTitleInput = document.querySelector("#customTitle");
             const customCopyInput = document.querySelector("#customCopy");
-            
+
             const posterTitle = document.querySelector("#posterTitle");
             const posterCopy = document.querySelector("#posterCopy");
 
@@ -800,7 +818,7 @@
 
             const updateScrollIndicator = () => {
                 if (!controls || !scrollIndicator) return;
-                
+
                 const threshold = 15; // px from bottom
                 const scrolledToBottom = controls.scrollHeight - controls.scrollTop - controls.clientHeight <= threshold;
                 const isScrollable = controls.scrollHeight > controls.clientHeight + 5;
@@ -814,7 +832,7 @@
 
             controls.addEventListener("scroll", updateScrollIndicator);
             window.addEventListener("resize", updateScrollIndicator);
-            
+
             // Observe style changes (e.g. toggling the custom text container)
             const observer = new MutationObserver(updateScrollIndicator);
             if (customTextContainer) {
@@ -825,4 +843,5 @@
             setTimeout(updateScrollIndicator, 150);
         </script>
     </body>
+
 </html>
