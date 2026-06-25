@@ -10,15 +10,15 @@
         <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
         <style>
             :root {
-                --ink: #171717;
-                --muted: #5d6470;
+                --ink: #0f172a;
+                --muted: #475569;
                 --paper: #ffffff;
-                --surface: #f6f7f9;
-                --line: #d8dee8;
+                --surface: #f8fafc;
+                --line: #e2e8f0;
                 --yellow: #ffd134;
-                --red: #c62828;
-                --green: #1f7a4d;
-                --blue: #2457a6;
+                --red: #ef4444;
+                --green: #10b981;
+                --blue: #2563eb;
             }
 
             * {
@@ -28,257 +28,420 @@
             html,
             body {
                 margin: 0;
-                min-height: 100%;
+                height: 100%;
+                overflow: hidden;
             }
 
             body {
                 background: var(--surface);
                 color: var(--ink);
                 font-family: "Cairo", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                -webkit-font-smoothing: antialiased;
             }
 
             button,
-            input {
+            input,
+            select,
+            textarea {
                 font: inherit;
             }
 
             .app-shell {
                 display: grid;
-                grid-template-columns: minmax(280px, 390px) minmax(320px, 1fr);
-                min-height: 100vh;
+                grid-template-columns: 390px 1fr;
+                height: 100vh;
+                overflow: hidden;
             }
 
             .controls {
-                align-content: center;
                 background: #ffffff;
                 border-left: 1px solid var(--line);
-                display: grid;
+                display: flex;
+                flex-direction: column;
                 gap: 24px;
-                padding: 40px clamp(20px, 4vw, 48px);
+                padding: 32px 24px;
+                overflow-y: auto;
+                box-shadow: 4px 0 20px rgba(0, 0, 0, 0.02);
+                z-index: 10;
             }
 
             .brand {
-                display: grid;
+                display: flex;
+                flex-direction: column;
                 gap: 8px;
             }
 
-            .brand-mark {
-                align-items: center;
-                background: var(--ink);
-                border-radius: 8px;
-                color: var(--yellow);
-                display: inline-flex;
-                font-size: 17px;
+            .brand h1 {
+                font-size: 28px;
                 font-weight: 900;
-                height: 44px;
-                justify-content: center;
-                width: 44px;
-            }
-
-            h1 {
-                font-size: clamp(30px, 4vw, 46px);
-                line-height: 1.15;
+                color: var(--ink);
                 margin: 0;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .brand h1::before {
+                content: "🚗";
+                font-size: 24px;
             }
 
             .tagline {
                 color: var(--muted);
-                font-size: 17px;
-                line-height: 1.7;
+                font-size: 14px;
+                line-height: 1.6;
                 margin: 0;
             }
 
             form {
-                display: grid;
-                gap: 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .control-group {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
             }
 
             label {
-                color: #2d333b;
-                font-size: 15px;
+                color: var(--ink);
+                font-size: 14px;
                 font-weight: 700;
             }
 
             .phone-input {
-                background: #fbfcfd;
+                background: #f8fafc;
                 border: 2px solid var(--line);
-                border-radius: 8px;
+                border-radius: 10px;
                 direction: ltr;
-                font-size: 22px;
+                font-size: 20px;
                 font-weight: 700;
                 letter-spacing: 1px;
                 outline: none;
-                padding: 14px 16px;
+                padding: 12px 16px;
                 text-align: left;
-                transition: border-color 160ms ease, box-shadow 160ms ease;
+                transition: all 160ms ease;
                 width: 100%;
             }
 
             .phone-input:focus {
                 border-color: var(--blue);
-                box-shadow: 0 0 0 4px rgba(36, 87, 166, 0.13);
+                background: #ffffff;
+                box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+            }
+
+            .select-input,
+            .text-input {
+                background: #f8fafc;
+                border: 2px solid var(--line);
+                border-radius: 10px;
+                font-size: 14px;
+                font-weight: 700;
+                outline: none;
+                padding: 12px 14px;
+                transition: all 160ms ease;
+                width: 100%;
+                color: var(--ink);
+                font-family: inherit;
+            }
+
+            .select-input:focus,
+            .text-input:focus {
+                border-color: var(--blue);
+                background: #ffffff;
+                box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+            }
+
+            textarea.text-input {
+                resize: vertical;
+            }
+
+            .theme-picker {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .theme-option {
+                align-items: center;
+                background: #f8fafc;
+                border: 2px solid #e2e8f0;
+                border-radius: 10px;
+                cursor: pointer;
+                display: flex;
+                gap: 10px;
+                padding: 10px 12px;
+                transition: all 160ms ease;
+                position: relative;
+            }
+
+            .theme-option:hover {
+                background: #f1f5f9;
+                border-color: #cbd5e1;
+            }
+
+            .theme-option input {
+                position: absolute;
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+            .swatch {
+                border-radius: 50%;
+                display: inline-block;
+                height: 20px;
+                width: 20px;
+                transition: transform 160ms ease;
+                flex-shrink: 0;
+            }
+
+            .theme-option input:checked + .swatch {
+                transform: scale(1.1);
+            }
+
+            .theme-option:has(input:checked) {
+                background: #ffffff;
+                border-color: var(--blue);
+                box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+            }
+
+            .theme-name {
+                font-size: 13px;
+                font-weight: 700;
+                color: var(--ink);
             }
 
             .actions {
-                display: grid;
-                gap: 10px;
-                grid-template-columns: 1fr auto;
+                margin-top: 10px;
             }
 
             .button {
                 align-items: center;
                 border: 0;
-                border-radius: 8px;
+                border-radius: 10px;
                 cursor: pointer;
                 display: inline-flex;
                 font-weight: 900;
                 gap: 10px;
                 justify-content: center;
                 min-height: 52px;
-                padding: 0 18px;
-                transition: opacity 160ms ease, transform 160ms ease;
+                padding: 0 24px;
+                transition: all 160ms ease;
+                width: 100%;
+                font-size: 16px;
             }
 
             .button:active {
-                transform: translateY(1px);
+                transform: scale(0.98);
             }
 
             .button-primary {
-                background: var(--green);
+                background: var(--blue);
                 color: #ffffff;
+                box-shadow: 0 4px 14px rgba(37, 99, 235, 0.2);
             }
 
-            .button-secondary {
-                background: #e9edf3;
-                color: var(--ink);
-                min-width: 56px;
-                padding: 0;
+            .button-primary:hover {
+                background: #1d4ed8;
+                box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
             }
 
             .button svg {
-                height: 21px;
-                width: 21px;
+                height: 20px;
+                width: 20px;
             }
 
             .status {
-                color: var(--muted);
-                font-size: 14px;
-                min-height: 24px;
-            }
-
-            .sr-only {
-                border: 0;
-                clip: rect(0 0 0 0);
-                height: 1px;
-                margin: -1px;
-                overflow: hidden;
-                padding: 0;
-                position: absolute;
-                white-space: nowrap;
-                width: 1px;
+                color: #dc2626;
+                font-size: 13px;
+                font-weight: 700;
+                min-height: 20px;
+                text-align: center;
+                margin-top: 8px;
             }
 
             .preview-area {
                 align-items: center;
+                background: #f1f5f9;
+                background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px);
+                background-size: 24px 24px;
                 display: flex;
                 justify-content: center;
-                overflow: auto;
-                padding: clamp(18px, 4vw, 52px);
+                height: 100vh;
+                padding: 40px;
+                box-sizing: border-box;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .preview-badge {
+                position: absolute;
+                top: 24px;
+                right: 24px;
+                background: rgba(15, 23, 42, 0.08);
+                color: #475569;
+                font-size: 12px;
+                font-weight: 900;
+                padding: 6px 14px;
+                border-radius: 20px;
+                backdrop-filter: blur(8px);
+                pointer-events: none;
+                user-select: none;
+                letter-spacing: 0.5px;
             }
 
             .poster-wrap {
                 width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                container-type: size;
             }
 
             .a4-poster {
-                align-items: center;
-                aspect-ratio: 210 / 297;
-                background: var(--paper);
-                border: clamp(8px, 2.1vw, 20px) solid var(--yellow);
-                border-radius: 18px;
-                box-shadow: 0 22px 50px rgba(17, 24, 39, 0.16);
+                --w: min(100cqw, calc(100cqh * 210 / 297));
+                width: var(--w);
+                height: calc(var(--w) * 297 / 210);
+                background: var(--poster-bg, #ffffff);
+                border: calc(var(--w) * 0.05) solid var(--poster-border-color, #ffd134);
+                border-radius: calc(var(--w) * 0.04);
+                box-shadow: 0 calc(var(--w) * 0.03) calc(var(--w) * 0.08) rgba(15, 23, 42, 0.12);
                 display: flex;
                 flex-direction: column;
-                justify-content: center;
-                margin: 0 auto;
+                box-sizing: border-box;
                 overflow: hidden;
-                padding: clamp(22px, 4.2vw, 52px);
-                text-align: center;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .poster-inner {
                 width: 100%;
+                height: 100%;
+                padding: calc(var(--w) * 0.08) calc(var(--w) * 0.08) calc(var(--w) * 0.06);
+                box-sizing: border-box;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: space-between;
+                text-align: center;
+            }
+
+            /* Themes definitions */
+            .theme-yellow {
+                --poster-border-color: #ffd134;
+                --poster-bg: #ffffff;
+                --poster-text-color: #0f172a;
+                --poster-copy-color: #475569;
+                --poster-phone-bg: #fffbeb;
+                --poster-phone-border: #f59e0b;
+                --poster-phone-text: #b45309;
+                --poster-footer-color: #64748b;
+                --poster-divider-color: #e2e8f0;
+            }
+
+            .theme-blue {
+                --poster-border-color: #2563eb;
+                --poster-bg: #ffffff;
+                --poster-text-color: #0f172a;
+                --poster-copy-color: #475569;
+                --poster-phone-bg: #eff6ff;
+                --poster-phone-border: #2563eb;
+                --poster-phone-text: #1d4ed8;
+                --poster-footer-color: #64748b;
+                --poster-divider-color: #e2e8f0;
+            }
+
+            .theme-green {
+                --poster-border-color: #059669;
+                --poster-bg: #ffffff;
+                --poster-text-color: #0f172a;
+                --poster-copy-color: #475569;
+                --poster-phone-bg: #ecfdf5;
+                --poster-phone-border: #059669;
+                --poster-phone-text: #047857;
+                --poster-footer-color: #64748b;
+                --poster-divider-color: #e2e8f0;
             }
 
             .poster-icon {
                 display: block;
-                height: clamp(72px, 13vw, 132px);
+                height: calc(var(--w) * 0.14);
                 object-fit: contain;
-                width: clamp(72px, 13vw, 132px);
+                width: auto;
+                transition: filter 0.3s ease;
             }
 
             .a4-poster h2 {
-                color: #111111;
-                font-size: clamp(33px, 6.4vw, 66px);
+                color: var(--poster-text-color);
+                font-size: calc(var(--w) * 0.082);
                 font-weight: 900;
-                line-height: 1.18;
-                margin: 18px 0 0;
+                line-height: 1.15;
+                margin: 0;
             }
 
             .poster-copy {
-                color: #414751;
-                font-size: clamp(22px, 4.2vw, 42px);
+                color: var(--poster-copy-color);
+                font-size: calc(var(--w) * 0.046);
                 font-weight: 700;
-                line-height: 1.48;
-                margin: clamp(16px, 3vw, 32px) 0;
+                line-height: 1.45;
+                margin: 0;
             }
 
             .phone-number {
-                background: #fff5f5;
-                border: clamp(3px, 0.9vw, 7px) dashed var(--red);
-                border-radius: 14px;
-                color: var(--red);
+                background: var(--poster-phone-bg);
+                border: calc(var(--w) * 0.008) dashed var(--poster-phone-border);
+                border-radius: calc(var(--w) * 0.03);
+                color: var(--poster-phone-text);
                 direction: ltr;
-                font-size: clamp(36px, 8.8vw, 90px);
+                font-size: calc(var(--w) * 0.095);
                 font-weight: 900;
-                letter-spacing: clamp(1px, 0.45vw, 6px);
-                line-height: 1.1;
-                margin: clamp(12px, 3vw, 34px) 0;
+                letter-spacing: calc(var(--w) * 0.005);
+                line-height: 1;
+                margin: 0;
                 max-width: 100%;
-                overflow-wrap: anywhere;
-                padding: clamp(12px, 2vw, 22px) clamp(16px, 4vw, 52px);
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-sizing: border-box;
+                padding: calc(var(--w) * 0.035) calc(var(--w) * 0.04);
             }
 
             .footer {
-                color: #626a75;
-                font-size: clamp(20px, 3.4vw, 34px);
+                color: var(--poster-footer-color);
+                font-size: calc(var(--w) * 0.044);
                 font-weight: 700;
-                margin-top: clamp(12px, 2.4vw, 28px);
+                margin: 0;
             }
 
             .make-your-own {
                 align-items: center;
-                border-top: 2px solid #edf0f4;
+                border-top: calc(var(--w) * 0.003) solid var(--poster-divider-color);
                 display: flex;
-                gap: clamp(12px, 2.6vw, 26px);
+                gap: calc(var(--w) * 0.04);
                 justify-content: center;
-                margin-top: clamp(16px, 3vw, 34px);
-                padding-top: clamp(12px, 2.2vw, 24px);
-                width: min(100%, 560px);
+                padding-top: calc(var(--w) * 0.04);
+                width: 100%;
             }
 
             .qr-code {
                 background: #ffffff;
-                border: 2px solid #111111;
-                border-radius: 8px;
+                border: calc(var(--w) * 0.004) solid #0f172a;
+                border-radius: calc(var(--w) * 0.015);
                 display: block;
                 flex: 0 0 auto;
-                height: clamp(76px, 12vw, 126px);
-                padding: 1px;
-                width: clamp(76px, 12vw, 126px);
+                height: calc(var(--w) * 0.14);
+                padding: calc(var(--w) * 0.005);
+                width: calc(var(--w) * 0.14);
             }
 
             .qr-copy {
-                color: #252b33;
-                font-size: clamp(17px, 2.9vw, 28px);
-                font-weight: 900;
+                color: var(--poster-text-color);
+                font-size: calc(var(--w) * 0.032);
+                font-weight: 700;
                 line-height: 1.35;
                 margin: 0;
                 text-align: right;
@@ -292,17 +455,33 @@
             @media (max-width: 840px) {
                 .app-shell {
                     grid-template-columns: 1fr;
+                    grid-template-rows: auto 1fr;
+                    height: 100vh;
+                    overflow: hidden;
                 }
 
                 .controls {
-                    align-content: start;
                     border-left: 0;
                     border-bottom: 1px solid var(--line);
-                    padding-block: 26px;
+                    padding: 18px;
+                    gap: 16px;
+                    max-height: 45vh;
+                    overflow-y: auto;
                 }
 
                 .preview-area {
-                    align-items: start;
+                    height: auto;
+                    flex-grow: 1;
+                    padding: 16px;
+                    overflow: hidden;
+                    background-size: 16px 16px;
+                }
+
+                .preview-badge {
+                    top: 12px;
+                    right: 12px;
+                    font-size: 10px;
+                    padding: 4px 10px;
                 }
             }
 
@@ -311,25 +490,28 @@
                     background: #ffffff;
                 }
 
-                .controls {
-                    display: none;
+                .controls,
+                .preview-badge {
+                    display: none !important;
                 }
 
                 .app-shell,
                 .preview-area,
                 .poster-wrap {
-                    display: block;
-                    min-height: 0;
-                    padding: 0;
-                    width: 210mm;
+                    display: block !important;
+                    min-height: 0 !important;
+                    height: 297mm !important;
+                    padding: 0 !important;
+                    width: 210mm !important;
+                    background: none !important;
                 }
 
                 .a4-poster {
-                    border: 20px solid var(--yellow);
-                    border-radius: 0;
-                    box-shadow: none;
-                    height: 297mm;
-                    width: 210mm;
+                    --w: 210mm !important;
+                    width: 210mm !important;
+                    height: 297mm !important;
+                    border-radius: 0 !important;
+                    box-shadow: none !important;
                     -webkit-print-color-adjust: exact;
                     print-color-adjust: exact;
                 }
@@ -341,33 +523,81 @@
             <section class="controls" aria-label="مولد لوحة الوقوف">
                 <div class="brand">
                     <h1>أركن بذوق</h1>
-                    <p class="tagline">اكتب رقمك وافتح نافذة الطباعة لحفظ اللوحة PDF أو طباعتها مباشرة.</p>
+                    <p class="tagline">صمم لوحة أرقام لسيارتك واطبعها أو احفظها كـ PDF لتضعها على الزجاج.</p>
                 </div>
 
                 <form id="posterForm">
-                    <label for="phoneInput">رقم الهاتف</label>
-                    <input class="phone-input" id="phoneInput" inputmode="tel" autocomplete="tel" name="phone" placeholder="01234567890" value="01234567890" required>
-                    <button class="button button-primary" id="printPosterButton" type="submit">
-                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                            <path d="M7 8V4h10v4M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M7 14h10v6H7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                        طباعة / حفظ PDF
-                    </button>
+                    <div class="control-group">
+                        <label for="phoneInput">رقم الهاتف</label>
+                        <input class="phone-input" id="phoneInput" inputmode="tel" autocomplete="tel" name="phone" placeholder="01234567890" value="01234567890" required>
+                    </div>
+
+                    <div class="control-group">
+                        <label>مظهر اللوحة</label>
+                        <div class="theme-picker">
+                            <label class="theme-option">
+                                <input type="radio" name="theme" value="theme-yellow" checked>
+                                <span class="swatch" style="background: #ffd134; border: 2px solid #ffd134;"></span>
+                                <span class="theme-name">الكلاسيكي</span>
+                            </label>
+                            <label class="theme-option">
+                                <input type="radio" name="theme" value="theme-blue">
+                                <span class="swatch" style="background: #ffffff; border: 2px solid #2563eb;"></span>
+                                <span class="theme-name">الأزرق</span>
+                            </label>
+                            <label class="theme-option">
+                                <input type="radio" name="theme" value="theme-green">
+                                <span class="swatch" style="background: #ffffff; border: 2px solid #059669;"></span>
+                                <span class="theme-name">الأخضر</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="textPreset">رسالة اللوحة</label>
+                        <select class="select-input" id="textPreset">
+                            <option value="preset-1" selected>عذراً على الإزعاج (الافتراضي)</option>
+                            <option value="preset-2">موقف مؤقت (ودي ولطيف)</option>
+                            <option value="preset-3">تنبيه بالاتصال (مختصر)</option>
+                            <option value="preset-custom">نص مخصص...</option>
+                        </select>
+                    </div>
+
+                    <div id="customTextContainer" class="control-group" style="display: none; animation: fadeIn 0.3s ease;">
+                        <label for="customTitle">العنوان الرئيسي</label>
+                        <input class="text-input" id="customTitle" type="text" placeholder="مثال: عذراً على الإزعاج">
+                        
+                        <label for="customCopy" style="margin-top: 8px;">نص التوضيح</label>
+                        <textarea class="text-input" id="customCopy" rows="3" placeholder="مثال: إذا كانت سيارتي تعيق حركتك،&#10;برجاء الاتصال بي فوراً على:"></textarea>
+                    </div>
+
+                    <div class="actions">
+                        <button class="button button-primary" id="printPosterButton" type="submit">
+                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <path d="M7 8V4h10v4M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M7 14h10v6H7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                            طباعة / حفظ PDF
+                        </button>
+                        <div class="status" id="status"></div>
+                    </div>
                 </form>
             </section>
 
             <section class="preview-area" aria-label="معاينة اللوحة">
+                <div class="preview-badge">معاينة حيّة</div>
                 <div class="poster-wrap">
-                    <article class="a4-poster" id="poster">
-                        <img src="Icons/car.png" class="poster-icon" alt="">
-                        <h2>عذراً على الإزعاج</h2>
-                        <p class="poster-copy">إذا كانت سيارتي تعيق حركتك،<br>برجاء الاتصال بي فوراً على:</p>
-                        <div class="phone-number" id="posterPhone">01065478654</div>
-                        <img src="Icons/phone.png" class="poster-icon" alt="">
-                        <div class="footer">شكراً لتفهمكم وذوقكم</div>
-                        <div class="make-your-own" aria-label="امسح الكود لعمل لوحة مشابهة">
-                            <img src="Icons/qrcode.svg" class="qr-code" alt="QR code لفتح موقع أركن بذوق">
-                            <p class="qr-copy">عايز تعمل لوحة زي دي برقمك؟<br>امسح الكود</p>
+                    <article class="a4-poster theme-yellow" id="poster">
+                        <div class="poster-inner">
+                            <img src="Icons/car.png" class="poster-icon" alt="">
+                            <h2 id="posterTitle">عذراً على الإزعاج</h2>
+                            <p class="poster-copy" id="posterCopy">إذا كانت سيارتي تعيق حركتك،<br>برجاء الاتصال بي فوراً على:</p>
+                            <div class="phone-number" id="posterPhone">01234567890</div>
+                            <img src="Icons/phone.png" class="poster-icon" alt="">
+                            <div class="footer" id="posterFooter">شكراً لتفهمكم وذوقكم</div>
+                            <div class="make-your-own" aria-label="امسح الكود لعمل لوحة مشابهة">
+                                <img src="Icons/qrcode.svg" class="qr-code" alt="QR code لفتح موقع أركن بذوق">
+                                <p class="qr-copy">عايز تعمل لوحة زي دي برقمك؟<br>امسح الكود</p>
+                            </div>
                         </div>
                     </article>
                 </div>
@@ -381,6 +611,33 @@
             const status = document.querySelector("#status");
             const printButton = document.querySelector("#printPosterButton");
 
+            const themeRadios = document.querySelectorAll('input[name="theme"]');
+            const poster = document.querySelector("#poster");
+
+            const textPreset = document.querySelector("#textPreset");
+            const customTextContainer = document.querySelector("#customTextContainer");
+            const customTitleInput = document.querySelector("#customTitle");
+            const customCopyInput = document.querySelector("#customCopy");
+            
+            const posterTitle = document.querySelector("#posterTitle");
+            const posterCopy = document.querySelector("#posterCopy");
+
+            const presets = {
+                "preset-1": {
+                    title: "عذراً على الإزعاج",
+                    copy: "إذا كانت سيارتي تعيق حركتك،<br>برجاء الاتصال بي فوراً على:"
+                },
+                "preset-2": {
+                    title: "موقف مؤقت",
+                    copy: "أنا هنا لفترة قصيرة. إذا كنت بحاجة للمرور،<br>يسعدني اتصالك بي في أي وقت:"
+                },
+                "preset-3": {
+                    title: "برجاء الاتصال بي",
+                    copy: "إذا كانت سيارتي تسبب لك أي مضايقة،<br>تواصل معي فوراً لتحريكها:"
+                }
+            };
+
+            // Phone Synchronization and validation
             const normalizePhone = (value) => value.replace(/[^\d+]/g, "").slice(0, 18);
 
             const setStatus = (message) => {
@@ -392,7 +649,7 @@
             const syncPoster = () => {
                 const normalized = normalizePhone(input.value);
                 input.value = normalized;
-                posterPhone.textContent = normalized || "01065478654";
+                posterPhone.textContent = normalized || "01234567890";
                 return normalized;
             };
 
@@ -400,6 +657,39 @@
                 syncPoster();
                 setStatus("");
             });
+
+            // Theme selection
+            themeRadios.forEach(radio => {
+                radio.addEventListener("change", (e) => {
+                    const selectedTheme = e.target.value;
+                    poster.className = "a4-poster " + selectedTheme;
+                });
+            });
+
+            // Preset Selection & Custom Text updates
+            const updatePosterText = () => {
+                const val = textPreset.value;
+                if (val === "preset-custom") {
+                    customTextContainer.style.display = "flex";
+                    posterTitle.textContent = customTitleInput.value || "عذراً على الإزعاج";
+                    posterCopy.innerHTML = (customCopyInput.value || "").replace(/\n/g, "<br>") || "إذا كانت سيارتي تعيق حركتك،<br>برجاء الاتصال بي فوراً على:";
+                } else {
+                    customTextContainer.style.display = "none";
+                    const preset = presets[val];
+                    if (preset) {
+                        posterTitle.textContent = preset.title;
+                        posterCopy.innerHTML = preset.copy;
+                    }
+                }
+            };
+
+            textPreset.addEventListener("change", updatePosterText);
+            customTitleInput.addEventListener("input", updatePosterText);
+            customCopyInput.addEventListener("input", updatePosterText);
+
+            // Initialize custom fields with default values
+            customTitleInput.value = presets["preset-1"].title;
+            customCopyInput.value = presets["preset-1"].copy.replace(/<br>/g, "\n");
 
             const printPoster = () => {
                 const phone = syncPoster();
